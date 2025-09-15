@@ -9,11 +9,9 @@ use App\Http\Controllers\Requests\Client\Appointments\AppointmentUpdateRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Http\Services\AppointmentService;
 use App\Http\Services\UserService;
-use App\Models\NotificationMethod;
 use App\Models\User;
 use App\Models\UserAppointment;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
 
 class AppointmentController extends ApiController
 {
@@ -30,6 +28,12 @@ class AppointmentController extends ApiController
         return $this->sendResponse(AppointmentResource::collection($appointments)->response()->getData(true));
     }
 
+    /**
+     * Return the specific appointment details
+     *
+     * @param UserAppointment $appointment
+     * @return \Illuminate\Http\Response
+     */
     public function show(UserAppointment $appointment)
     {
         return $this->sendResponse(new AppointmentResource($appointment));
@@ -39,7 +43,9 @@ class AppointmentController extends ApiController
      * Store the appointment with his user
      *
      * @param AppointmentStoreRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param UserService $userService
+     * @param AppointmentService $appointmentService
+     * @return \Illuminate\Http\Response
      */
     public function store(
         AppointmentStoreRequest $request,
@@ -63,17 +69,15 @@ class AppointmentController extends ApiController
             }
 
             $userService->update($request, $user);
-            $appointmentService->store($request, $user);
+            $appointment = $appointmentService->store($request, $user);
 
             DB::commit();
-        } catch (\Exception $exception) {
-            session()->flash('error', 'Неуспешно записване на час.');
+        } catch (\Error $exception) {
             DB::rollBack();
-            return redirect()->back();
+            return $this->sendError('Неуспешно записване на час.');
         }
 
-        session()->flash('success', 'Успешно запазихте час! Клиентът ще бъде уведомен чрез [SMS/Email].');
-        return redirect()->route('appointments.index');
+        return $this->sendResponse(new AppointmentResource($appointment), 'Успешно запазихте час! Клиентът ще бъде уведомен чрез [SMS/Email].');
     }
 
     /**
@@ -81,7 +85,9 @@ class AppointmentController extends ApiController
      *
      * @param AppointmentUpdateRequest $request
      * @param UserAppointment $appointment
-     * @return \Illuminate\Http\RedirectResponse
+     * @param UserService $userService
+     * @param AppointmentService $appointmentService
+     * @return \Illuminate\Http\Response
      */
     public function update(
         AppointmentUpdateRequest $request,
@@ -96,15 +102,12 @@ class AppointmentController extends ApiController
             $appointmentService->update($request, $appointment);
 
             DB::commit();
-        } catch (\Exception $exception) {
-            info($exception->getMessage());
-            session()->flash('error', 'Неуспешна промяна на час.');
+        } catch (\Error $exception) {
             DB::rollBack();
-            return redirect()->back();
+            return $this->sendError('Неуспешна промяна на час.');
         }
 
-        session()->flash('success', 'Успешна промяна на час!');
-        return redirect()->route('appointments.index');
+        return $this->sendResponse([], 'Успешна промяна на час!');
     }
 
     /**
@@ -117,8 +120,7 @@ class AppointmentController extends ApiController
     {
         $appointment->delete();
         AppointmentDeletedEvent::dispatch($appointment);
-        session()->flash('success', 'Успешно изтрит час!');
 
-        return redirect()->route('appointments.index');
+        return $this->sendResponse([], 'Успешно изтрит час!');
     }
 }

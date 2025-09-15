@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Events\AppointmentCreatedEvent;
 use App\Models\NotificationMethod;
+use App\Models\User;
 use App\Models\UserAppointment;
 
 class AppointmentService
@@ -20,6 +21,7 @@ class AppointmentService
         $from = $request->input('from');
         $to = $request->input('to');
         $egn = $request->input('egn');
+        $userId = $request->input('user_id');
 
         $appointments = UserAppointment::query()
             ->with('user', 'notification_method')
@@ -34,6 +36,9 @@ class AppointmentService
                     return $query->where('egn', $egn);
                 });
             })
+            ->when($userId, function ($query) use ($userId) {
+                return $query->where('user_id', $userId);
+            })
             ->latest()
             ->paginate();
 
@@ -44,10 +49,10 @@ class AppointmentService
      * Store the appointment
      *
      * @param $request
-     * @param $user
-     * @return void
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function store($request, $user)
+    public function store($request, User $user)
     {
         $notificationMethod = NotificationMethod::bySlug($request->input('notification_method'))->firstOrFail();
         $appointment = $user->appointments()->create([
@@ -55,8 +60,9 @@ class AppointmentService
             'notification_method_id' => $notificationMethod->id,
             'description' => $request->input('description'),
         ]);
-
         AppointmentCreatedEvent::dispatch($appointment);
+
+        return $appointment;
     }
 
     /**

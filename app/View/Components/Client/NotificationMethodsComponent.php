@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Client;
 
-use App\Models\NotificationMethod;
+use App\Http\Services\NotificationMethodService;
 use Illuminate\View\Component;
 
 class NotificationMethodsComponent extends Component
@@ -25,7 +25,8 @@ class NotificationMethodsComponent extends Component
     public function __construct($value = null)
     {
         $this->value = $value;
-        $this->notificationMethods = NotificationMethod::onlyActive()->get();
+        $notificationMethodService = new NotificationMethodService();
+        $this->notificationMethods = $notificationMethodService->index();
     }
 
     /**

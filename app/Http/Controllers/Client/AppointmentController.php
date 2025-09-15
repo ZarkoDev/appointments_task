@@ -47,6 +47,8 @@ class AppointmentController extends Controller
      * Store the appointment with his user
      *
      * @param AppointmentStoreRequest $request
+     * @param UserService $userService
+     * @param AppointmentService $appointmentService
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(
@@ -112,6 +114,8 @@ class AppointmentController extends Controller
      *
      * @param AppointmentUpdateRequest $request
      * @param UserAppointment $appointment
+     * @param UserService $userService
+     * @param AppointmentService $appointmentService
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(
@@ -128,7 +132,6 @@ class AppointmentController extends Controller
 
             DB::commit();
         } catch (\Exception $exception) {
-            info($exception->getMessage());
             session()->flash('error', 'Неуспешна промяна на час.');
             DB::rollBack();
             return redirect()->back();

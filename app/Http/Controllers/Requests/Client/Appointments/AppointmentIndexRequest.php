@@ -27,6 +27,7 @@ class AppointmentIndexRequest extends FormRequest
             'egn' => ['sometimes', 'nullable', 'numeric', 'digits:10'],
             'from' => ['sometimes', 'nullable',  'date_format:"Y-m-d"'],
             'to' => ['sometimes', 'nullable',  'date_format:"Y-m-d"'],
+            'user_id' => ['sometimes', 'nullable', 'numeric', 'exists:users,id'],
         ];
     }
 }
