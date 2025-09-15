@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\PaymentMethod;
+use App\Models\NotificationMethod;
 use Illuminate\Database\Seeder;
 
-class PaymentMethodsSeeder extends Seeder
+class NotificationMethodsSeeder extends Seeder
 {
 
     /**
@@ -22,7 +21,7 @@ class PaymentMethodsSeeder extends Seeder
         ];
 
         foreach ($paymentMethods as $slug => $name) {
-            PaymentMethod::updateOrCreate(
+            NotificationMethod::updateOrCreate(
                 ['slug' => $slug],
                 ['name' => $name]
             );

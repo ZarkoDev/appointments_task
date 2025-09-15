@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentMethod extends Model
+class NotificationMethod extends Model
 {
     public $timestamps = false;
 
@@ -38,5 +38,16 @@ class PaymentMethod extends Model
     public function scopeOnlyActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Returns by slug
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeBySlug(Builder $query, string $slug): Builder
+    {
+        return $query->where('slug', $slug);
     }
 }

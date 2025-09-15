@@ -18,7 +18,7 @@ class UserAppointment extends Model
      */
     protected $fillable = [
         'user_id',
-        'payment_method_id',
+        'notification_method_id',
         'time',
         'description',
         'notified_at'
@@ -50,9 +50,9 @@ class UserAppointment extends Model
      *
      * @returns BelongsTo
      */
-    public function payment_method(): BelongsTo
+    public function notification_method(): BelongsTo
     {
-        return $this->belongsTo(PaymentMethod::class);
+        return $this->belongsTo(NotificationMethod::class);
     }
 
     /**
@@ -64,5 +64,16 @@ class UserAppointment extends Model
     public function scopeOnlyNotified(Builder $query): Builder
     {
         return $query->whereNotNull('notified_at');
+    }
+
+    /**
+     * Returns only not notified appointments
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotNotified(Builder $query): Builder
+    {
+        return $query->whereNull('notified_at');
     }
 }

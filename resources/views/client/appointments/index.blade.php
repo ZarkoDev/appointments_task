@@ -1,123 +1,87 @@
 @extends('layouts.guest_layout')
 
 @section('content-wrapper')
-    <div class="content">
-        <div class="py-4 px-3 px-md-4">
-            <div class="card mb-3 mb-md-4">
-                <div class="card-body">
+    <div class="card mb-3 mb-md-4">
+        <div class="card-body">
+            <form method="GET" id="filters">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="from">Date From</label>
 
-                    <div class="mb-3 mb-md-4 d-flex justify-content-between">
-                        <div class="h3 mb-0">Users</div>
+                        <input
+                            class="form-control"
+                            type="date"
+                            id="from"
+                            name="from"
+                            value="{{ request()->get('from') }}"
+                        />
+
+                        @error('from')
+                        <small class="mt-2 block text-danger" role="alert">
+                            {{ $message }}
+                        </small>
+                        @enderror
                     </div>
+                    <div class="form-group col-md-4">
+                        <label for="to">Date To</label>
 
-                    <!-- Users -->
-                    <div class="table-responsive-xl">
-                        <table class="table text-nowrap mb-0">
-                            <thead>
-                            <tr>
-                                <th class="font-weight-semi-bold border-top-0 py-2">#</th>
-                                <th class="font-weight-semi-bold border-top-0 py-2">Name</th>
-                                <th class="font-weight-semi-bold border-top-0 py-2">Email</th>
-                                <th class="font-weight-semi-bold border-top-0 py-2">Registration Date</th>
-                                <th class="font-weight-semi-bold border-top-0 py-2">Status</th>
-                                <th class="font-weight-semi-bold border-top-0 py-2">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="py-3">1</td>
-                                <td class="align-middle py-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="position-relative mr-2">
-                                            <span class="indicator indicator-lg indicator-bordered-reverse indicator-top-left indicator-success rounded-circle"></span>
-                                            <!--img class="avatar rounded-circle" src="#" alt="John Doe"-->
-                                            <span class="avatar-placeholder mr-md-2">J</span>
-                                        </div>
-                                        John Doe
-                                    </div>
-                                </td>
-                                <td class="py-3">john.doe@example.com</td>
-                                <td class="py-3">January 15, 2019</td>
-                                <td class="py-3">
-                                    <span class="badge badge-pill badge-success">Verified</span>
-                                </td>
-                                <td class="py-3">
-                                    <div class="position-relative">
-                                        <a class="link-dark d-inline-block" href="#">
-                                            <i class="gd-pencil icon-text"></i>
-                                        </a>
-                                        <a class="link-dark d-inline-block" href="#">
-                                            <i class="gd-trash icon-text"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="py-3">2</td>
-                                <td class="align-middle py-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="position-relative mr-2">
-                                            <!--img class="avatar rounded-circle" src="#" alt="John Doe"-->
-                                            <span class="avatar-placeholder mr-md-2">S</span>
-                                        </div>
-                                        Sam Dew
-                                    </div>
-                                </td>
-                                <td class="py-3">sam.dew@example.com</td>
-                                <td class="py-3">January 15, 2019</td>
-                                <td class="py-3">
-                                    <span class="badge badge-pill badge-warning">Pending</span>
-                                </td>
-                                <td class="py-3">
-                                    <div class="position-relative">
-                                        <a class="link-dark d-inline-block" href="#">
-                                            <i class="gd-pencil icon-text"></i>
-                                        </a>
-                                        <a class="link-dark d-inline-block" href="#">
-                                            <i class="gd-trash icon-text"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="py-3">3</td>
-                                <td class="align-middle py-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="position-relative mr-2">
-                                            <span class="indicator indicator-lg indicator-bordered-reverse indicator-top-left indicator-success rounded-circle"></span>
-                                            <!--img class="avatar rounded-circle" src="#" alt="John Doe"-->
-                                            <span class="avatar-placeholder mr-md-2">A</span>
-                                        </div>
-                                        Anna Doe
-                                    </div>
-                                </td>
-                                <td class="py-3">anna.doe@example.com</td>
-                                <td class="py-3">January 15, 2019</td>
-                                <td class="py-3">
-                                    <span class="badge badge-pill badge-success">Verified</span>
-                                </td>
-                                <td class="py-3">
-                                    <div class="position-relative">
-                                        <a class="link-dark d-inline-block" href="#">
-                                            <i class="gd-pencil icon-text"></i>
-                                        </a>
-                                        <a class="link-dark d-inline-block" href="#">
-                                            <i class="gd-trash icon-text"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="card-footer d-block d-md-flex align-items-center d-print-none">
-                            <div class="d-flex mb-2 mb-md-0">Showing 1 to 8 of 24 Entries</div>
+                        <input
+                            class="form-control"
+                            type="date"
+                            id="to"
+                            name="to"
+                            value="{{ request()->get('to') }}"
+                        />
 
-                            <nav class="d-flex ml-md-auto d-print-none" aria-label="Pagination"><ul class="pagination justify-content-end font-weight-semi-bold mb-0">				<li class="page-item">				<a id="datatablePaginationPrev" class="page-link" href="#!" aria-label="Previous"><i class="gd-angle-left icon-text icon-text-xs d-inline-block"></i></a>				</li><li class="page-item d-none d-md-block"><a id="datatablePaginationPage0" class="page-link active" href="#!" data-dt-page-to="0">1</a></li><li class="page-item d-none d-md-block"><a id="datatablePagination1" class="page-link" href="#!" data-dt-page-to="1">2</a></li><li class="page-item d-none d-md-block"><a id="datatablePagination2" class="page-link" href="#!" data-dt-page-to="2">3</a></li><li class="page-item">				<a id="datatablePaginationNext" class="page-link" href="#!" aria-label="Next"><i class="gd-angle-right icon-text icon-text-xs d-inline-block"></i></a>				</li>				</ul></nav>
-                        </div>
+                        @error('to')
+                        <small class="mt-2 block text-danger" role="alert">
+                            {{ $message }}
+                        </small>
+                        @enderror
                     </div>
-                    <!-- End Users -->
+                    <div class="form-group col-md-4">
+                        <label for="egn">EGN</label>
+
+                        <input
+                            class="form-control"
+                            type="text"
+                            id="egn"
+                            name="egn"
+                            value="{{ request()->get('egn') }}"
+                        />
+
+                        @error('egn')
+                        <small class="mt-2 block text-danger" role="alert">
+                            {{ $message }}
+                        </small>
+                        @enderror
+                    </div>
                 </div>
+                <button type="submit" class="btn btn-success">Search</button>
+                <button id="clear-filter" type="button" class="btn btn-info">Clear</button>
+            </form>
+
+            <div class="mt-3 mb-3 mb-md-4 d-flex justify-content-between">
+                <div class="h3 mb-0">Appointments</div>
+                <a href="{{ route('appointments.create') }}" class="btn btn-info">Create New</a>
+            </div>
+
+            <div class="table-responsive-xl">
+                <x-appointments-table
+                    :appointments="$appointments"
+                    :pagination="true"
+                />
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.getElementById('clear-filter').onclick=function(){
+            document.getElementById("from").value = "";
+            document.getElementById("to").value = "";
+            document.getElementById("egn").value = "";
+        }
+    </script>
+@endpush

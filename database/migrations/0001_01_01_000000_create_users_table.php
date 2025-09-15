@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('egn')->unique();
-            $table->string('phone')->unique()->nullable();
+
+            # Create phone and email as Non-Unique as there are no requirements
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }

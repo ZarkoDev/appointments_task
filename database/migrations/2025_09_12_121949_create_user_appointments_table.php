@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('payment_method_id')->constrained('payment_methods');
+            $table->foreignId('notification_method_id')->constrained('notification_methods');
             $table->dateTime('time');
             $table->string('description')->nullable();
             $table->dateTime('notified_at')->nullable();

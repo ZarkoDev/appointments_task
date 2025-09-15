@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Http\Controllers\Api;
 
 use App\Events\AppointmentDeletedEvent;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Requests\Client\Appointments\AppointmentIndexRequest;
 use App\Http\Controllers\Requests\Client\Appointments\AppointmentStoreRequest;
 use App\Http\Controllers\Requests\Client\Appointments\AppointmentUpdateRequest;
+use App\Http\Resources\AppointmentResource;
 use App\Http\Services\AppointmentService;
 use App\Http\Services\UserService;
 use App\Models\NotificationMethod;
@@ -15,32 +15,24 @@ use App\Models\UserAppointment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 
-class AppointmentController extends Controller
+class AppointmentController extends ApiController
 {
     /**
-     * List all appointments
+     *  List all appointments
      *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @param AppointmentIndexRequest $request
+     * @return mixed
      */
     public function index(AppointmentIndexRequest $request, AppointmentService $appointmentService)
     {
         $appointments = $appointmentService->index($request);
 
-        return view('client.appointments.index', compact('appointments'));
+        return $this->sendResponse(AppointmentResource::collection($appointments)->response()->getData(true));
     }
 
-    /**
-     * Show create view of the appointment
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function create(Request $request)
+    public function show(UserAppointment $appointment)
     {
-        $paymentMethods = NotificationMethod::onlyActive()->get();
-
-        return view('client.appointments.create', compact('paymentMethods'));
+        return $this->sendResponse(new AppointmentResource($appointment));
     }
 
     /**
@@ -82,29 +74,6 @@ class AppointmentController extends Controller
 
         session()->flash('success', 'Успешно запазихте час! Клиентът ще бъде уведомен чрез [SMS/Email].');
         return redirect()->route('appointments.index');
-    }
-
-    /**
-     * Show edit view of the appointment
-     * Show latest appointments also
-     *
-     * @param UserAppointment $appointment
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function edit(UserAppointment $appointment) {
-        $paymentMethods = NotificationMethod::onlyActive()->get();
-        $appointments = $appointment->user->appointments()
-            ->with('user', 'notification_method')
-            ->where('id', '!=', $appointment->id)
-            ->latest()
-            ->limit(10)
-            ->get();
-
-        return view('client.appointments.edit', compact(
-            'appointment',
-            'appointments',
-            'paymentMethods'
-        ));
     }
 
     /**
