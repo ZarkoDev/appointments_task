@@ -116,7 +116,7 @@ class AppointmentController extends ApiController
      * @param UserAppointment $appointment
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(UserAppointment $appointment)
+    public function destroy(UserAppointment $appointment)
     {
         $appointment->delete();
         AppointmentDeletedEvent::dispatch($appointment);

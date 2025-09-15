@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Events\AppointmentCreatedEvent;
 
-class SendAppointmentCratedNotification
+class SendAppointmentCrеatedNotification
 {
     /**
      * Handle the event.

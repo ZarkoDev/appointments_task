@@ -14,9 +14,7 @@
     @foreach($appointments as $appointment)
         <tr>
             <td class="py-3">{{ $appointment->id }}</td>
-            <td class="align-middle py-3">
-                {{ $appointment->user->full_name }}
-            </td>
+            <td class="py-3">{{ $appointment->user->full_name }}</td>
             <td class="py-3">{{ $appointment->user->egn }}</td>
             <td class="py-3">{{ $appointment->time->format('d-m-Y H:i') }}</td>
             <td class="py-3">{{ $appointment->notification_method->name }}</td>
@@ -33,9 +31,13 @@
                        href="{{ route('appointments.edit', $appointment) }}">
                         <i class="gd-pencil icon-text"></i>
                     </a>
-                    <a class="link-dark d-inline-block" href="#">
-                        <i class="gd-trash icon-text"></i>
-                    </a>
+                    <form method="POST" action="{{ route('appointments.destroy', $appointment) }}" class="d-inline-block">
+                        @method('DELETE')
+                        @csrf
+                        <button type="submit" class="link-dark btn">
+                            <i class="gd-trash icon-text"></i>
+                        </button>
+                    </form>
                 </div>
             </td>
         </tr>

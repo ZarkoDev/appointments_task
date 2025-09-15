@@ -35,7 +35,7 @@ class AppointmentsReminderCron extends Command
             // TODO:: notify by email
 
             # Notify the user
-            info(sprintf('Appointment #%d reminder for %s', $appointment->id, $appointment->user->full_name));
+            info(sprintf('Appointment #%d: Email is sent to remind client %s', $appointment->id, $appointment->user->full_name));
             $appointment->update([
                 'notified_at' => Carbon::now(),
             ]);
