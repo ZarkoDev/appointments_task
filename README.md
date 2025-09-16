@@ -14,3 +14,4 @@ Developed on Laravel 12 with PHP version 8.3.
 - php artisan key:generate
 - php artisan migrate
 - php artisan db:seed
+- php artisan serve
